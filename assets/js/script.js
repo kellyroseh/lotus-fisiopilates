@@ -27,8 +27,35 @@
     });
   });
 
+  function closeDrops() {
+    document.querySelectorAll(".menu-drop.is-open").forEach(function (drop) {
+      drop.classList.remove("is-open");
+      var button = drop.querySelector(".menu-drop__btn");
+      if (button) button.setAttribute("aria-expanded", "false");
+    });
+  }
+
+  document.querySelectorAll(".menu-drop").forEach(function (drop) {
+    var button = drop.querySelector(".menu-drop__btn");
+    if (!button) return;
+    button.addEventListener("click", function () {
+      var open = !drop.classList.contains("is-open");
+      closeDrops();
+      drop.classList.toggle("is-open", open);
+      button.setAttribute("aria-expanded", String(open));
+    });
+  });
+
+  document.addEventListener("click", function (event) {
+    if (event.target.closest(".menu-drop")) return;
+    closeDrops();
+  });
+
   document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape") toggles.forEach(function (item) { setMenu(item, false); });
+    if (event.key === "Escape") {
+      toggles.forEach(function (item) { setMenu(item, false); });
+      closeDrops();
+    }
   });
 
   var header = document.getElementById("header") || document.getElementById("nav") || document.querySelector("[data-header]");
